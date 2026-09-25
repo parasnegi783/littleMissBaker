@@ -1,138 +1,228 @@
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import { useState } from "react";
+import { HeartIcon } from "./Decorations";
 
 export default function Navbar() {
   const { totalItems } = useCart();
+  const { user, logout, isLoggedIn } = useAuth();
+  const { showToast } = useToast();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
     { path: "/", label: "Home" },
-    { path: "/shop", label: "Shop" },
-    { path: "/about", label: "About" },
+    { path: "/shop", label: "Menu" },
+    { path: "/about", label: "Our Story" },
     { path: "/contact", label: "Contact" },
   ];
 
+  const handleLogout = () => {
+    logout();
+    showToast("See you soon, sweetie! 💕", "info");
+    setUserMenuOpen(false);
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-amber-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 sm:h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="text-2xl sm:text-3xl">🧁</span>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-amber-900 tracking-tight group-hover:text-amber-700 transition-colors">
-                Sweet Crumbs
-              </h1>
-              <p className="text-[10px] sm:text-xs text-amber-600 -mt-1 tracking-widest uppercase">
-                Artisan Bakery
-              </p>
-            </div>
-          </Link>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`text-sm font-medium transition-colors relative py-1 ${
-                  isActive(link.path)
-                    ? "text-amber-800"
-                    : "text-gray-600 hover:text-amber-700"
-                }`}
-              >
-                {link.label}
-                {isActive(link.path) && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-600 rounded-full" />
-                )}
-              </Link>
-            ))}
-          </div>
-
-          {/* Cart + Mobile Toggle */}
-          <div className="flex items-center gap-3">
-            <Link
-              to="/cart"
-              className="relative p-2 rounded-full hover:bg-amber-50 transition-colors group"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-amber-800 group-hover:text-amber-600 transition-colors"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"
-                />
-              </svg>
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-amber-50 transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-amber-800"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                {mobileOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
+    <>
+      {/* Announcement Bar */}
+      <div className="bg-gradient-to-r from-[#DC8B92] to-[#CE717C] text-white text-center py-2 text-xs sm:text-sm font-medium tracking-wide">
+        <span className="inline-flex items-center gap-2">
+          <HeartIcon className="w-3 h-3" />
+          Free delivery on orders over $35 ✨ Use code SWEET15 for 15% off
+          <HeartIcon className="w-3 h-3" />
+        </span>
       </div>
 
-      {/* Mobile Nav */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-amber-100 shadow-lg">
-          <div className="px-4 py-4 space-y-2">
-            {navLinks.map((link) => (
+      {/* Main Header */}
+      <nav className="sticky top-0 z-50 bg-[#FFFBF9]/95 backdrop-blur-md border-b border-pink-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 sm:h-20">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center border-2 border-[#DC8B92]/30 shadow-sm group-hover:shadow-md transition-shadow">
+                <span className="text-lg sm:text-xl">🧁</span>
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-bold text-[#6E4C3B] font-[Playfair_Display] leading-tight">
+                  Little Miss Baker
+                </h1>
+                <p className="text-[10px] text-[#DC8B92] tracking-widest uppercase font-[Quicksand]">
+                  Baked with Care
+                </p>
+              </div>
+            </Link>
+
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center gap-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`text-sm font-medium font-[Quicksand] transition-colors relative py-1 ${
+                    isActive(link.path)
+                      ? "text-[#B95A66]"
+                      : "text-[#6E4C3B]/70 hover:text-[#B95A66]"
+                  }`}
+                >
+                  {link.label}
+                  {isActive(link.path) && (
+                    <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-[#DC8B92] rounded-full" />
+                  )}
+                </Link>
+              ))}
+            </div>
+
+            {/* Right Side */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Cart */}
               <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(link.path)
-                    ? "bg-amber-50 text-amber-800"
-                    : "text-gray-600 hover:bg-amber-50 hover:text-amber-700"
-                }`}
+                to="/cart"
+                className="relative p-2 rounded-full hover:bg-pink-50 transition-colors group"
               >
-                {link.label}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 sm:h-6 sm:w-6 text-[#6E4C3B] group-hover:text-[#B95A66] transition-colors"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"
+                  />
+                </svg>
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#DC8B92] text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center animate-[popIn_0.3s_ease-out]">
+                    {totalItems}
+                  </span>
+                )}
               </Link>
-            ))}
+
+              {/* Auth Buttons */}
+              {isLoggedIn ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center text-white font-bold text-sm border-2 border-[#DC8B92]/30 hover:shadow-md transition-shadow"
+                  >
+                    {user?.initial}
+                  </button>
+                  {userMenuOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-pink-100 py-2 z-50">
+                      <div className="px-4 py-2 border-b border-pink-50">
+                        <p className="font-medium text-[#6E4C3B] text-sm">
+                          {user?.name}
+                        </p>
+                        <p className="text-xs text-[#6E4C3B]/50">
+                          {user?.email}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-sm text-[#6E4C3B] hover:bg-pink-50 transition-colors"
+                      >
+                        Log out 💕
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 text-sm font-medium text-[#6E4C3B] hover:text-[#B95A66] transition-colors font-[Quicksand]"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="px-5 py-2 bg-[#DC8B92] hover:bg-[#B95A66] text-white text-sm font-medium rounded-full transition-all hover:shadow-md hover:scale-105 font-[Quicksand]"
+                  >
+                    Sign up
+                  </Link>
+                </div>
+              )}
+
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-pink-50 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-[#6E4C3B]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  {mobileOpen ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      )}
-    </nav>
+
+        {/* Mobile Nav */}
+        {mobileOpen && (
+          <div className="md:hidden bg-[#FFFBF9] border-t border-pink-100 shadow-lg">
+            <div className="px-4 py-4 space-y-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block px-4 py-3 rounded-xl text-sm font-medium font-[Quicksand] transition-colors ${
+                    isActive(link.path)
+                      ? "bg-pink-50 text-[#B95A66]"
+                      : "text-[#6E4C3B]/70 hover:bg-pink-50 hover:text-[#B95A66]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              {!isLoggedIn && (
+                <div className="pt-3 border-t border-pink-100 flex gap-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1 text-center px-4 py-2.5 text-sm font-medium text-[#6E4C3B] border border-pink-200 rounded-full"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1 text-center px-4 py-2.5 text-sm font-medium text-white bg-[#DC8B92] rounded-full"
+                  >
+                    Sign up
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </nav>
+    </>
   );
 }

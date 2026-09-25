@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
 import { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastContext";
+import { HeartIcon, SparkleIcon } from "./Decorations";
 
 interface ProductCardProps {
   product: Product;
@@ -8,45 +9,38 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { showToast } = useToast();
+
+  const handleAdd = () => {
+    addToCart(product);
+    showToast(`${product.name} added to basket! 🧁`);
+  };
 
   return (
-    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-amber-50 hover:border-amber-200">
+    <div className="group bg-[#FFFBF9] rounded-3xl shadow-sm hover:shadow-xl hover:shadow-pink-100/50 transition-all duration-300 overflow-hidden border border-pink-100/50 hover:-translate-y-1">
       {/* Image Area */}
-      <Link to={`/product/${product.id}`} className="block relative">
-        <div className="aspect-square bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center">
-          <span className="text-6xl sm:text-7xl group-hover:scale-110 transition-transform duration-300">
-            {product.image}
-          </span>
-        </div>
-        {product.badge && (
+      <div className="relative aspect-square bg-gradient-to-br from-[#F9E2DF]/50 to-[#F2CDC9]/30 flex items-center justify-center overflow-hidden">
+        <span className="text-6xl sm:text-7xl group-hover:scale-110 transition-transform duration-500">
+          {product.emoji}
+        </span>
+        {product.tag && (
           <span
-            className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold ${
-              product.badge === "Bestseller"
-                ? "bg-amber-500 text-white"
-                : product.badge === "New"
-                ? "bg-green-500 text-white"
-                : product.badge === "Seasonal"
-                ? "bg-orange-500 text-white"
-                : "bg-rose-500 text-white"
-            }`}
+            className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-semibold text-white ${product.tagColor || "bg-pink-500"}`}
           >
-            {product.badge}
+            {product.tag}
           </span>
         )}
-      </Link>
+        {/* Decorative sparkles */}
+        <SparkleIcon className="absolute top-4 right-4 w-4 h-4 text-[#DC8B92]/30 group-hover:text-[#DC8B92]/60 transition-colors" />
+        <HeartIcon className="absolute bottom-4 left-4 w-3 h-3 text-[#DC8B92]/20 group-hover:text-[#DC8B92]/50 transition-colors" />
+      </div>
 
       {/* Content */}
       <div className="p-4 sm:p-5">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <Link
-            to={`/product/${product.id}`}
-            className="text-base sm:text-lg font-semibold text-gray-800 hover:text-amber-700 transition-colors line-clamp-1"
-          >
-            {product.name}
-          </Link>
-        </div>
-
-        <p className="text-gray-500 text-sm mb-3 line-clamp-2">
+        <h3 className="text-base sm:text-lg font-semibold text-[#6E4C3B] font-[Playfair_Display] mb-1.5 line-clamp-1">
+          {product.name}
+        </h3>
+        <p className="text-[#6E4C3B]/60 text-sm mb-3 line-clamp-2 font-[Quicksand] leading-relaxed">
           {product.description}
         </p>
 
@@ -58,8 +52,8 @@ export default function ProductCard({ product }: ProductCardProps) {
                 key={i}
                 className={`w-3.5 h-3.5 ${
                   i < Math.floor(product.rating)
-                    ? "text-amber-400"
-                    : "text-gray-200"
+                    ? "text-[#DC8B92]"
+                    : "text-pink-100"
                 }`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -68,21 +62,35 @@ export default function ProductCard({ product }: ProductCardProps) {
               </svg>
             ))}
           </div>
-          <span className="text-xs text-gray-400">
+          <span className="text-[10px] text-[#6E4C3B]/40">
             ({product.reviews})
           </span>
         </div>
 
-        {/* Price + Add to Cart */}
+        {/* Price + Add */}
         <div className="flex items-center justify-between">
-          <span className="text-xl font-bold text-amber-800">
+          <span className="text-xl font-bold text-[#B95A66] font-[Quicksand]">
             ${product.price.toFixed(2)}
           </span>
           <button
-            onClick={() => addToCart(product)}
-            className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-full transition-all hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+            onClick={handleAdd}
+            className="w-10 h-10 rounded-full bg-[#DC8B92] hover:bg-[#B95A66] text-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md hover:shadow-lg"
+            title="Add to basket"
           >
-            Add to Cart
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
           </button>
         </div>
       </div>

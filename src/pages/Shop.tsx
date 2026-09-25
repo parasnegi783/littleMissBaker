@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { products, categories } from "../data/products";
+import { SectionDivider } from "../components/Decorations";
 
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,13 +13,9 @@ export default function Shop() {
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
-
-    // Filter by category
     if (activeCategory !== "All") {
       filtered = filtered.filter((p) => p.category === activeCategory);
     }
-
-    // Filter by search
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -27,8 +24,6 @@ export default function Shop() {
           p.description.toLowerCase().includes(query)
       );
     }
-
-    // Sort
     switch (sortBy) {
       case "price-low":
         return [...filtered].sort((a, b) => a.price - b.price);
@@ -45,24 +40,26 @@ export default function Shop() {
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
-    if (category === "All") {
-      setSearchParams({});
-    } else {
-      setSearchParams({ category });
-    }
+    if (category === "All") setSearchParams({});
+    else setSearchParams({ category });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/50 to-white pt-20 sm:pt-24">
-      {/* Header */}
+    <div className="min-h-screen bg-[#FBF4F0] pt-8 sm:pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-5xl font-bold text-amber-950 mb-4">
-            Our Products
+        {/* Header */}
+        <div className="text-center mb-10">
+          <SectionDivider />
+          <h1 className="text-3xl sm:text-5xl font-bold text-[#6E4C3B] mb-3 font-[Playfair_Display]">
+            Our{" "}
+            <span className="text-[#DC8B92] font-[Great_Vibes] text-4xl sm:text-6xl">
+              Sweet
+            </span>{" "}
+            Menu
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Explore our full collection of handcrafted baked goods, made fresh
-            daily with love.
+          <p className="text-[#6E4C3B]/60 max-w-xl mx-auto font-[Quicksand]">
+            Browse our collection of handcrafted treats, made fresh daily with
+            love and the finest ingredients.
           </p>
         </div>
 
@@ -71,7 +68,7 @@ export default function Shop() {
           <div className="relative flex-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="h-5 w-5 absolute left-4 top-1/2 -translate-y-1/2 text-[#6E4C3B]/30"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -85,16 +82,16 @@ export default function Shop() {
             </svg>
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Search our bakes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-amber-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none transition-all bg-white"
+              className="w-full pl-11 pr-4 py-3 rounded-full border border-pink-200 focus:border-[#DC8B92] focus:ring-2 focus:ring-[#F9E2DF] outline-none transition-all bg-[#FFFBF9] font-[Quicksand] text-sm"
             />
           </div>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-3 rounded-xl border border-amber-200 focus:border-amber-400 focus:ring-2 focus:ring-amber-100 outline-none transition-all bg-white text-gray-700"
+            className="px-5 py-3 rounded-full border border-pink-200 focus:border-[#DC8B92] outline-none transition-all bg-[#FFFBF9] text-[#6E4C3B] font-[Quicksand] text-sm"
           >
             <option value="default">Sort by: Default</option>
             <option value="price-low">Price: Low to High</option>
@@ -105,15 +102,15 @@ export default function Shop() {
         </div>
 
         {/* Categories */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 mb-8 sm:mb-12">
+        <div className="flex flex-wrap gap-2 sm:gap-3 mb-10">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
-              className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm font-medium transition-all ${
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all font-[Quicksand] ${
                 activeCategory === category
-                  ? "bg-amber-600 text-white shadow-md"
-                  : "bg-white text-gray-600 border border-amber-200 hover:border-amber-400 hover:text-amber-700"
+                  ? "bg-[#DC8B92] text-white shadow-md"
+                  : "bg-[#FFFBF9] text-[#6E4C3B]/70 border border-pink-200 hover:border-[#DC8B92] hover:text-[#B95A66]"
               }`}
             >
               {category}
@@ -122,11 +119,10 @@ export default function Shop() {
         </div>
 
         {/* Results Count */}
-        <p className="text-sm text-gray-500 mb-6">
-          Showing {filteredProducts.length} product
+        <p className="text-sm text-[#6E4C3B]/50 mb-6 font-[Quicksand]">
+          Showing {filteredProducts.length} treat
           {filteredProducts.length !== 1 ? "s" : ""}
           {activeCategory !== "All" && ` in ${activeCategory}`}
-          {searchQuery && ` matching "${searchQuery}"`}
         </p>
 
         {/* Products Grid */}
@@ -139,11 +135,11 @@ export default function Shop() {
         ) : (
           <div className="text-center py-16">
             <span className="text-6xl mb-4 block">🔍</span>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              No products found
+            <h3 className="text-xl font-semibold text-[#6E4C3B] mb-2 font-[Quicksand]">
+              No treats found
             </h3>
-            <p className="text-gray-500">
-              Try adjusting your search or filter criteria.
+            <p className="text-[#6E4C3B]/50 font-[Quicksand]">
+              Try adjusting your search or filter.
             </p>
             <button
               onClick={() => {
@@ -151,7 +147,7 @@ export default function Shop() {
                 setSearchQuery("");
                 setSearchParams({});
               }}
-              className="mt-4 px-6 py-2 bg-amber-100 text-amber-700 rounded-full hover:bg-amber-200 transition-colors font-medium"
+              className="mt-4 px-6 py-2 bg-[#F9E2DF] text-[#B95A66] rounded-full hover:bg-[#F2CDC9] transition-colors font-medium font-[Quicksand]"
             >
               Clear Filters
             </button>
