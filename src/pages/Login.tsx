@@ -1,10 +1,9 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
-import { HeartIcon } from "../components/Decorations";
-import { FloatingElements } from "../components/FloatingElements";
-import { motion } from "framer-motion";
+import { HeartIcon, FloatingHearts } from "../components/Decorations";
 
 export default function Login() {
   const { login } = useAuth();
@@ -88,68 +87,84 @@ export default function Login() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen flex flex-col lg:flex-row"
-    >
+    <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Back to home */}
-      <Link
-        to="/"
-        className="fixed top-4 left-4 z-50 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-pink-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.5 }}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 text-[#6E4C3B]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
+        <Link
+          to="/"
+          className="fixed top-4 left-4 z-50 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-pink-200 flex items-center justify-center hover:bg-white transition-colors shadow-sm"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </Link>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 text-[#6E4C3B]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </Link>
+      </motion.div>
 
       {/* Left Panel - Brand */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#DC8B92] to-[#B95A66] relative items-center justify-center p-12">
-        <FloatingElements />
-        <div className="relative text-center text-white max-w-md">
+      <motion.div
+        className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#DC8B92] to-[#B95A66] relative items-center justify-center p-12"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <FloatingHearts />
+        <motion.div
+          className="relative text-center text-white max-w-md"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
           {/* Logo */}
           <motion.div
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
             className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-8 border-2 border-white/30"
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >
-            <span className="text-4xl">🧁</span>
+            <motion.span
+              className="text-4xl"
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            >
+              🧁
+            </motion.span>
           </motion.div>
 
           <motion.p
+            className="font-[Great_Vibes] text-3xl mb-3 text-white/90"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="font-[Great_Vibes] text-3xl mb-3 text-white/90"
+            transition={{ delay: 0.5 }}
           >
             Welcome back, sweetie!
           </motion.p>
           <motion.h2
+            className="text-3xl font-bold font-[Playfair_Display] mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-3xl font-bold font-[Playfair_Display] mb-4"
+            transition={{ delay: 0.6 }}
           >
             Little Miss Baker
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
             className="text-white/70 mb-8 font-[Quicksand] leading-relaxed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
           >
             Sign in to access your orders, save favorites, and get exclusive
             sweet deals.
@@ -157,55 +172,71 @@ export default function Login() {
 
           {/* Benefits */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
             className="space-y-4 text-left"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.1, delayChildren: 0.8 } }
+            }}
           >
             {[
               "Track your orders in real-time",
               "Save your favorite bakes",
               "Get exclusive member discounts",
-            ].map((benefit, i) => (
+            ].map((benefit) => (
               <motion.div
                 key={benefit}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 + i * 0.1 }}
                 className="flex items-center gap-3 text-white/80 font-[Quicksand]"
+                variants={{
+                  hidden: { opacity: 0, x: -20 },
+                  visible: { opacity: 1, x: 0 }
+                }}
               >
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                <motion.div
+                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"
+                  whileHover={{ scale: 1.2, rotate: 10 }}
+                >
                   <HeartIcon className="w-4 h-4 text-white" />
-                </div>
+                </motion.div>
                 <span>{benefit}</span>
               </motion.div>
             ))}
           </motion.div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Right Panel - Form */}
-      <div className="flex-1 bg-[#FBF4F0] flex items-center justify-center p-6 sm:p-8 lg:p-12">
+      <motion.div
+        className="flex-1 bg-[#FBF4F0] flex items-center justify-center p-6 sm:p-8 lg:p-12"
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <motion.div
+            className="lg:hidden text-center mb-8"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="lg:hidden text-center mb-8"
           >
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center mx-auto mb-3 border-2 border-[#DC8B92]/30">
+            <motion.div
+              className="w-16 h-16 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center mx-auto mb-3 border-2 border-[#DC8B92]/30"
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
               <span className="text-2xl">🧁</span>
-            </div>
+            </motion.div>
             <h1 className="text-2xl font-bold text-[#6E4C3B] font-[Playfair_Display]">
               Little Miss Baker
             </h1>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
             className="bg-[#FFFBF9] rounded-3xl p-6 sm:p-8 shadow-sm border border-pink-100/50"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
           >
             {/* Tab Switcher */}
             <div className="flex bg-[#F9E2DF]/30 rounded-full p-1 mb-6">
@@ -224,31 +255,31 @@ export default function Login() {
             </div>
 
             <motion.h2
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
               className="text-2xl font-bold text-[#6E4C3B] mb-1 font-[Playfair_Display]"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
             >
               Welcome back!
             </motion.h2>
             <motion.p
+              className="text-[#6E4C3B]/50 text-sm mb-6 font-[Quicksand]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-[#6E4C3B]/50 text-sm mb-6 font-[Quicksand]"
             >
               Sign in to continue your sweet journey
             </motion.p>
 
             {/* Google Button */}
             <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
               onClick={handleGoogleLogin}
               className="w-full flex items-center justify-center gap-3 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:shadow-sm transition-all mb-4 font-[Quicksand] text-sm font-medium text-[#6E4C3B]"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -273,10 +304,10 @@ export default function Login() {
 
             {/* Divider */}
             <motion.div
+              className="flex items-center gap-4 my-5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex items-center gap-4 my-5"
             >
               <div className="flex-1 h-px bg-pink-200" />
               <span className="text-xs text-[#6E4C3B]/40 font-[Quicksand]">
@@ -287,13 +318,12 @@ export default function Login() {
 
             {/* Method Tabs */}
             <motion.div
+              className="flex gap-2 mb-5"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="flex gap-2 mb-5"
             >
               <motion.button
-                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   setMethod("email");
                   setOtpStep(false);
@@ -303,11 +333,12 @@ export default function Login() {
                     ? "bg-[#F9E2DF] text-[#B95A66]"
                     : "text-[#6E4C3B]/50 hover:text-[#6E4C3B]"
                 }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 📧 Email
               </motion.button>
               <motion.button
-                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   setMethod("mobile");
                   setOtpStep(false);
@@ -317,6 +348,8 @@ export default function Login() {
                     ? "bg-[#F9E2DF] text-[#B95A66]"
                     : "text-[#6E4C3B]/50 hover:text-[#6E4C3B]"
                 }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 📱 Mobile
               </motion.button>
@@ -325,11 +358,11 @@ export default function Login() {
             {/* Email Form */}
             {method === "email" && (
               <motion.form
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
                 onSubmit={handleEmailLogin}
                 className="space-y-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
               >
                 <div>
                   <label className="block text-xs font-medium text-[#6E4C3B]/70 mb-1.5 font-[Quicksand]">
@@ -373,10 +406,10 @@ export default function Login() {
                   </div>
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                   type="submit"
                   className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all shadow-md font-[Quicksand]"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   Log In 💕
                 </motion.button>
@@ -386,9 +419,9 @@ export default function Login() {
             {/* Mobile Form */}
             {method === "mobile" && !otpStep && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
                 className="space-y-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
               >
                 <div>
                   <label className="block text-xs font-medium text-[#6E4C3B]/70 mb-1.5 font-[Quicksand]">
@@ -415,10 +448,10 @@ export default function Login() {
                   </div>
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                   onClick={handleSendOTP}
                   className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all shadow-md font-[Quicksand]"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   Send OTP 📱
                 </motion.button>
@@ -428,9 +461,9 @@ export default function Login() {
             {/* OTP Screen */}
             {method === "mobile" && otpStep && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
                 className="space-y-4"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
               >
                 <p className="text-sm text-[#6E4C3B]/60 font-[Quicksand]">
                   Enter the 6-digit code sent to{" "}
@@ -443,14 +476,14 @@ export default function Login() {
                     <motion.input
                       key={i}
                       id={`otp-${i}`}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
                       type="text"
                       maxLength={1}
                       value={digit}
                       onChange={(e) => handleOtpChange(i, e.target.value)}
                       className="w-11 h-12 text-center text-lg font-bold rounded-xl border border-pink-200 focus:border-[#DC8B92] focus:ring-2 focus:ring-[#F9E2DF] outline-none transition-all bg-white font-[Quicksand]"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
                     />
                   ))}
                 </div>
@@ -475,10 +508,10 @@ export default function Login() {
                   )}
                 </div>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                   onClick={handleVerifyOTP}
                   className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all shadow-md font-[Quicksand]"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   Verify & Continue ✓
                 </motion.button>
@@ -487,10 +520,10 @@ export default function Login() {
 
             {/* Switch to signup */}
             <motion.p
+              className="text-center text-sm text-[#6E4C3B]/50 mt-6 font-[Quicksand]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9 }}
-              className="text-center text-sm text-[#6E4C3B]/50 mt-6 font-[Quicksand]"
             >
               Don't have an account?{" "}
               <Link
@@ -502,7 +535,7 @@ export default function Login() {
             </motion.p>
           </motion.div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

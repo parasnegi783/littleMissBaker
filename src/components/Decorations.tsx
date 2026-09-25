@@ -1,4 +1,4 @@
-// SVG decorative elements for the Little Miss Baker theme
+import { motion } from "framer-motion";
 
 export function HeartIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -50,18 +50,29 @@ export function FloatingHearts() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {[...Array(6)].map((_, i) => (
-        <div
+        <motion.div
           key={i}
-          className="absolute text-pink-200/40 animate-[float_6s_ease-in-out_infinite]"
+          className="absolute text-pink-200/40"
           style={{
             left: `${15 + i * 15}%`,
             top: `${10 + (i % 3) * 30}%`,
-            animationDelay: `${i * 0.8}s`,
             fontSize: `${12 + (i % 3) * 8}px`,
+          }}
+          animate={{
+            y: [0, -20, 0],
+            x: [0, 10, -10, 0],
+            rotate: [0, 10, -10, 0],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 4 + i * 0.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.3,
           }}
         >
           ♥
-        </div>
+        </motion.div>
       ))}
     </div>
   );
@@ -69,12 +80,32 @@ export function FloatingHearts() {
 
 export function SectionDivider() {
   return (
-    <div className="flex items-center justify-center gap-3 py-4">
+    <motion.div
+      className="flex items-center justify-center gap-3 py-4"
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+    >
       <div className="h-px w-12 bg-gradient-to-r from-transparent to-pink-300" />
-      <HeartIcon className="w-3 h-3 text-pink-300" />
-      <SparkleIcon className="w-3 h-3 text-pink-300" />
-      <HeartIcon className="w-3 h-3 text-pink-300" />
+      <motion.div
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <HeartIcon className="w-3 h-3 text-pink-300" />
+      </motion.div>
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+      >
+        <SparkleIcon className="w-3 h-3 text-pink-300" />
+      </motion.div>
+      <motion.div
+        animate={{ scale: [1, 1.2, 1] }}
+        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+      >
+        <HeartIcon className="w-3 h-3 text-pink-300" />
+      </motion.div>
       <div className="h-px w-12 bg-gradient-to-l from-transparent to-pink-300" />
-    </div>
+    </motion.div>
   );
 }
