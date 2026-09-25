@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { useState } from "react";
 import { HeartIcon } from "./Decorations";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const { totalItems } = useCart();
@@ -31,13 +32,18 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement Bar */}
-      <div className="bg-gradient-to-r from-[#DC8B92] to-[#CE717C] text-white text-center py-2 text-xs sm:text-sm font-medium tracking-wide">
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-r from-[#DC8B92] to-[#CE717C] text-white text-center py-2 text-xs sm:text-sm font-medium tracking-wide"
+      >
         <span className="inline-flex items-center gap-2">
           <HeartIcon className="w-3 h-3" />
           Free delivery on orders over $35 ✨ Use code SWEET15 for 15% off
           <HeartIcon className="w-3 h-3" />
         </span>
-      </div>
+      </motion.div>
 
       {/* Main Header */}
       <nav className="sticky top-0 z-50 bg-[#FFFBF9]/95 backdrop-blur-md border-b border-pink-100">
@@ -45,9 +51,13 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-16 sm:h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center border-2 border-[#DC8B92]/30 shadow-sm group-hover:shadow-md transition-shadow">
+              <motion.div
+                whileHover={{ rotate: 10, scale: 1.1 }}
+                transition={{ duration: 0.3 }}
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center border-2 border-[#DC8B92]/30 shadow-sm group-hover:shadow-md"
+              >
                 <span className="text-lg sm:text-xl">🧁</span>
-              </div>
+              </motion.div>
               <div className="hidden sm:block">
                 <h1 className="text-lg font-bold text-[#6E4C3B] font-[Playfair_Display] leading-tight">
                   Little Miss Baker
@@ -72,7 +82,10 @@ export default function Navbar() {
                 >
                   {link.label}
                   {isActive(link.path) && (
-                    <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-[#DC8B92] rounded-full" />
+                    <motion.span
+                      layoutId="navbar-indicator"
+                      className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-[#DC8B92] rounded-full"
+                    />
                   )}
                 </Link>
               ))}
@@ -100,39 +113,54 @@ export default function Navbar() {
                   />
                 </svg>
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#DC8B92] text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center animate-[popIn_0.3s_ease-out]">
+                  <motion.span
+                    key={totalItems}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 bg-[#DC8B92] text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                  >
                     {totalItems}
-                  </span>
+                  </motion.span>
                 )}
               </Link>
 
               {/* Auth Buttons */}
               {isLoggedIn ? (
                 <div className="relative">
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center text-white font-bold text-sm border-2 border-[#DC8B92]/30 hover:shadow-md transition-shadow"
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center text-white font-bold text-sm border-2 border-[#DC8B92]/30 hover:shadow-md"
                   >
                     {user?.initial}
-                  </button>
-                  {userMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-pink-100 py-2 z-50">
-                      <div className="px-4 py-2 border-b border-pink-50">
-                        <p className="font-medium text-[#6E4C3B] text-sm">
-                          {user?.name}
-                        </p>
-                        <p className="text-xs text-[#6E4C3B]/50">
-                          {user?.email}
-                        </p>
-                      </div>
-                      <button
-                        onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-sm text-[#6E4C3B] hover:bg-pink-50 transition-colors"
+                  </motion.button>
+                  <AnimatePresence>
+                    {userMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-pink-100 py-2 z-50"
                       >
-                        Log out 💕
-                      </button>
-                    </div>
-                  )}
+                        <div className="px-4 py-2 border-b border-pink-50">
+                          <p className="font-medium text-[#6E4C3B] text-sm">
+                            {user?.name}
+                          </p>
+                          <p className="text-xs text-[#6E4C3B]/50">
+                            {user?.email}
+                          </p>
+                        </div>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 text-sm text-[#6E4C3B] hover:bg-pink-50 transition-colors"
+                        >
+                          Log out 💕
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ) : (
                 <div className="hidden sm:flex items-center gap-2">
@@ -152,7 +180,8 @@ export default function Navbar() {
               )}
 
               {/* Mobile menu button */}
-              <button
+              <motion.button
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setMobileOpen(!mobileOpen)}
                 className="md:hidden p-2 rounded-lg hover:bg-pink-50 transition-colors"
               >
@@ -178,50 +207,69 @@ export default function Navbar() {
                     />
                   )}
                 </svg>
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
 
         {/* Mobile Nav */}
-        {mobileOpen && (
-          <div className="md:hidden bg-[#FFFBF9] border-t border-pink-100 shadow-lg">
-            <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setMobileOpen(false)}
-                  className={`block px-4 py-3 rounded-xl text-sm font-medium font-[Quicksand] transition-colors ${
-                    isActive(link.path)
-                      ? "bg-pink-50 text-[#B95A66]"
-                      : "text-[#6E4C3B]/70 hover:bg-pink-50 hover:text-[#B95A66]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {!isLoggedIn && (
-                <div className="pt-3 border-t border-pink-100 flex gap-2">
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex-1 text-center px-4 py-2.5 text-sm font-medium text-[#6E4C3B] border border-pink-200 rounded-full"
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden bg-[#FFFBF9] border-t border-pink-100 shadow-lg overflow-hidden"
+            >
+              <div className="px-4 py-4 space-y-1">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.path}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
                   >
-                    Log in
-                  </Link>
-                  <Link
-                    to="/signup"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex-1 text-center px-4 py-2.5 text-sm font-medium text-white bg-[#DC8B92] rounded-full"
+                    <Link
+                      to={link.path}
+                      onClick={() => setMobileOpen(false)}
+                      className={`block px-4 py-3 rounded-xl text-sm font-medium font-[Quicksand] transition-colors ${
+                        isActive(link.path)
+                          ? "bg-pink-50 text-[#B95A66]"
+                          : "text-[#6E4C3B]/70 hover:bg-pink-50 hover:text-[#B95A66]"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                {!isLoggedIn && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="pt-3 border-t border-pink-100 flex gap-2"
                   >
-                    Sign up
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex-1 text-center px-4 py-2.5 text-sm font-medium text-[#6E4C3B] border border-pink-200 rounded-full"
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      to="/signup"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex-1 text-center px-4 py-2.5 text-sm font-medium text-white bg-[#DC8B92] rounded-full"
+                    >
+                      Sign up
+                    </Link>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </>
   );

@@ -2,6 +2,7 @@ import { Product } from "../data/products";
 import { useCart } from "../context/CartContext";
 import { useToast } from "../context/ToastContext";
 import { HeartIcon, SparkleIcon } from "./Decorations";
+import { motion } from "framer-motion";
 
 interface ProductCardProps {
   product: Product;
@@ -17,21 +18,37 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <div className="group bg-[#FFFBF9] rounded-3xl shadow-sm hover:shadow-xl hover:shadow-pink-100/50 transition-all duration-300 overflow-hidden border border-pink-100/50 hover:-translate-y-1">
+    <motion.div
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
+      className="group bg-[#FFFBF9] rounded-3xl shadow-sm hover:shadow-xl hover:shadow-pink-100/50 transition-all duration-300 overflow-hidden border border-pink-100/50"
+    >
       {/* Image Area */}
       <div className="relative aspect-square bg-gradient-to-br from-[#F9E2DF]/50 to-[#F2CDC9]/30 flex items-center justify-center overflow-hidden">
-        <span className="text-6xl sm:text-7xl group-hover:scale-110 transition-transform duration-500">
+        <motion.span
+          whileHover={{ scale: 1.15, rotate: 5 }}
+          transition={{ duration: 0.4 }}
+          className="text-6xl sm:text-7xl"
+        >
           {product.emoji}
-        </span>
+        </motion.span>
         {product.tag && (
-          <span
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
             className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-semibold text-white ${product.tagColor || "bg-pink-500"}`}
           >
             {product.tag}
-          </span>
+          </motion.span>
         )}
         {/* Decorative sparkles */}
-        <SparkleIcon className="absolute top-4 right-4 w-4 h-4 text-[#DC8B92]/30 group-hover:text-[#DC8B92]/60 transition-colors" />
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        >
+          <SparkleIcon className="absolute top-4 right-4 w-4 h-4 text-[#DC8B92]/30 group-hover:text-[#DC8B92]/60 transition-colors" />
+        </motion.div>
         <HeartIcon className="absolute bottom-4 left-4 w-3 h-3 text-[#DC8B92]/20 group-hover:text-[#DC8B92]/50 transition-colors" />
       </div>
 
@@ -72,9 +89,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-xl font-bold text-[#B95A66] font-[Quicksand]">
             ${product.price.toFixed(2)}
           </span>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.9 }}
             onClick={handleAdd}
-            className="w-10 h-10 rounded-full bg-[#DC8B92] hover:bg-[#B95A66] text-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md hover:shadow-lg"
+            className="w-10 h-10 rounded-full bg-[#DC8B92] hover:bg-[#B95A66] text-white flex items-center justify-center transition-all shadow-md hover:shadow-lg"
             title="Add to basket"
           >
             <svg
@@ -91,9 +110,9 @@ export default function ProductCard({ product }: ProductCardProps) {
                 d="M12 4v16m8-8H4"
               />
             </svg>
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

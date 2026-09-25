@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
-import { HeartIcon, FloatingHearts } from "../components/Decorations";
+import { HeartIcon } from "../components/Decorations";
+import { FloatingElements } from "../components/FloatingElements";
+import { motion } from "framer-motion";
 
 export default function Login() {
   const { login } = useAuth();
@@ -79,7 +81,6 @@ export default function Login() {
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
-    // Auto-focus next
     if (value && index < 5) {
       const next = document.getElementById(`otp-${index + 1}`);
       next?.focus();
@@ -87,7 +88,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex flex-col lg:flex-row"
+    >
       {/* Back to home */}
       <Link
         to="/"
@@ -111,42 +117,70 @@ export default function Login() {
 
       {/* Left Panel - Brand */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#DC8B92] to-[#B95A66] relative items-center justify-center p-12">
-        <FloatingHearts />
+        <FloatingElements />
         <div className="relative text-center text-white max-w-md">
           {/* Logo */}
-          <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-8 border-2 border-white/30">
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+            className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-8 border-2 border-white/30"
+          >
             <span className="text-4xl">🧁</span>
-          </div>
+          </motion.div>
 
-          <p className="font-[Great_Vibes] text-3xl mb-3 text-white/90">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="font-[Great_Vibes] text-3xl mb-3 text-white/90"
+          >
             Welcome back, sweetie!
-          </p>
-          <h2 className="text-3xl font-bold font-[Playfair_Display] mb-4">
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-3xl font-bold font-[Playfair_Display] mb-4"
+          >
             Little Miss Baker
-          </h2>
-          <p className="text-white/70 mb-8 font-[Quicksand] leading-relaxed">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-white/70 mb-8 font-[Quicksand] leading-relaxed"
+          >
             Sign in to access your orders, save favorites, and get exclusive
             sweet deals.
-          </p>
+          </motion.p>
 
           {/* Benefits */}
-          <div className="space-y-4 text-left">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="space-y-4 text-left"
+          >
             {[
               "Track your orders in real-time",
               "Save your favorite bakes",
               "Get exclusive member discounts",
-            ].map((benefit) => (
-              <div
+            ].map((benefit, i) => (
+              <motion.div
                 key={benefit}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.7 + i * 0.1 }}
                 className="flex items-center gap-3 text-white/80 font-[Quicksand]"
               >
                 <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                   <HeartIcon className="w-4 h-4 text-white" />
                 </div>
                 <span>{benefit}</span>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -154,16 +188,25 @@ export default function Login() {
       <div className="flex-1 bg-[#FBF4F0] flex items-center justify-center p-6 sm:p-8 lg:p-12">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="lg:hidden text-center mb-8"
+          >
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#F9E2DF] to-[#DC8B92] flex items-center justify-center mx-auto mb-3 border-2 border-[#DC8B92]/30">
               <span className="text-2xl">🧁</span>
             </div>
             <h1 className="text-2xl font-bold text-[#6E4C3B] font-[Playfair_Display]">
               Little Miss Baker
             </h1>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#FFFBF9] rounded-3xl p-6 sm:p-8 shadow-sm border border-pink-100/50">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-[#FFFBF9] rounded-3xl p-6 sm:p-8 shadow-sm border border-pink-100/50"
+          >
             {/* Tab Switcher */}
             <div className="flex bg-[#F9E2DF]/30 rounded-full p-1 mb-6">
               <Link
@@ -180,15 +223,30 @@ export default function Login() {
               </Link>
             </div>
 
-            <h2 className="text-2xl font-bold text-[#6E4C3B] mb-1 font-[Playfair_Display]">
+            <motion.h2
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-2xl font-bold text-[#6E4C3B] mb-1 font-[Playfair_Display]"
+            >
               Welcome back!
-            </h2>
-            <p className="text-[#6E4C3B]/50 text-sm mb-6 font-[Quicksand]">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-[#6E4C3B]/50 text-sm mb-6 font-[Quicksand]"
+            >
               Sign in to continue your sweet journey
-            </p>
+            </motion.p>
 
             {/* Google Button */}
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={handleGoogleLogin}
               className="w-full flex items-center justify-center gap-3 py-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:shadow-sm transition-all mb-4 font-[Quicksand] text-sm font-medium text-[#6E4C3B]"
             >
@@ -211,20 +269,31 @@ export default function Login() {
                 />
               </svg>
               Continue with Google
-            </button>
+            </motion.button>
 
             {/* Divider */}
-            <div className="flex items-center gap-4 my-5">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex items-center gap-4 my-5"
+            >
               <div className="flex-1 h-px bg-pink-200" />
               <span className="text-xs text-[#6E4C3B]/40 font-[Quicksand]">
                 or continue with
               </span>
               <div className="flex-1 h-px bg-pink-200" />
-            </div>
+            </motion.div>
 
             {/* Method Tabs */}
-            <div className="flex gap-2 mb-5">
-              <button
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="flex gap-2 mb-5"
+            >
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   setMethod("email");
                   setOtpStep(false);
@@ -236,8 +305,9 @@ export default function Login() {
                 }`}
               >
                 📧 Email
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   setMethod("mobile");
                   setOtpStep(false);
@@ -249,12 +319,18 @@ export default function Login() {
                 }`}
               >
                 📱 Mobile
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
             {/* Email Form */}
             {method === "email" && (
-              <form onSubmit={handleEmailLogin} className="space-y-4">
+              <motion.form
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                onSubmit={handleEmailLogin}
+                className="space-y-4"
+              >
                 <div>
                   <label className="block text-xs font-medium text-[#6E4C3B]/70 mb-1.5 font-[Quicksand]">
                     Email Address
@@ -296,18 +372,24 @@ export default function Login() {
                     </a>
                   </div>
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all hover:scale-105 active:scale-95 shadow-md font-[Quicksand]"
+                  className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all shadow-md font-[Quicksand]"
                 >
                   Log In 💕
-                </button>
-              </form>
+                </motion.button>
+              </motion.form>
             )}
 
             {/* Mobile Form */}
             {method === "mobile" && !otpStep && (
-              <div className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="space-y-4"
+              >
                 <div>
                   <label className="block text-xs font-medium text-[#6E4C3B]/70 mb-1.5 font-[Quicksand]">
                     Phone Number
@@ -332,18 +414,24 @@ export default function Login() {
                     />
                   </div>
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={handleSendOTP}
-                  className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all hover:scale-105 active:scale-95 shadow-md font-[Quicksand]"
+                  className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all shadow-md font-[Quicksand]"
                 >
                   Send OTP 📱
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             )}
 
             {/* OTP Screen */}
             {method === "mobile" && otpStep && (
-              <div className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-4"
+              >
                 <p className="text-sm text-[#6E4C3B]/60 font-[Quicksand]">
                   Enter the 6-digit code sent to{" "}
                   <span className="font-medium text-[#6E4C3B]">
@@ -352,9 +440,12 @@ export default function Login() {
                 </p>
                 <div className="flex gap-2 justify-center">
                   {otp.map((digit, i) => (
-                    <input
+                    <motion.input
                       key={i}
                       id={`otp-${i}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.05 }}
                       type="text"
                       maxLength={1}
                       value={digit}
@@ -383,17 +474,24 @@ export default function Login() {
                     </button>
                   )}
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={handleVerifyOTP}
-                  className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all hover:scale-105 active:scale-95 shadow-md font-[Quicksand]"
+                  className="w-full py-3 bg-[#DC8B92] hover:bg-[#B95A66] text-white font-semibold rounded-full transition-all shadow-md font-[Quicksand]"
                 >
                   Verify & Continue ✓
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             )}
 
             {/* Switch to signup */}
-            <p className="text-center text-sm text-[#6E4C3B]/50 mt-6 font-[Quicksand]">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="text-center text-sm text-[#6E4C3B]/50 mt-6 font-[Quicksand]"
+            >
               Don't have an account?{" "}
               <Link
                 to="/signup"
@@ -401,10 +499,10 @@ export default function Login() {
               >
                 Sign up
               </Link>
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

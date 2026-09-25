@@ -12,6 +12,9 @@ import Signup from "./pages/Signup";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import { useEffect } from "react";
+import { LoadingScreen } from "./components/LoadingScreen";
+import { CursorFollower } from "./components/CursorFollower";
+import { ScrollProgress } from "./components/ScrollProgress";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -28,6 +31,9 @@ function AppContent() {
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
+      <LoadingScreen />
+      <CursorFollower />
+      <ScrollProgress />
       {!isAuthPage && <Navbar />}
       <main className="flex-1">
         <Routes>
